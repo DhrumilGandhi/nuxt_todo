@@ -11,4 +11,5 @@ export default defineNuxtConfig({
       tailwindcss(),
     ],
   },
+  modules: ["@prisma/nuxt"]
 })
