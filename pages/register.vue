@@ -50,12 +50,15 @@
                     password: password.value
                 }
             });
-            Swal.fire({
+            const { isConfirmed } = await Swal.fire({
                 title: 'Success',
                 text: 'Account Created',
                 icon: 'success',
                 confirmButtonText: 'Close'
-            })
+            });
+            if (isConfirmed) {
+                navigateTo('/');
+            }
         } catch (error) {
             Swal.fire({
                 title: 'Error!',

@@ -1,6 +1,7 @@
 import prisma from "~/lib/prisma";
 import bcrypt from "bcrypt";
 import validator from 'validator';
+import jwt from 'jsonwebtoken'; 
 
 const saltRounds = 10;
 
@@ -27,13 +28,15 @@ export default defineEventHandler(async (event) => {
         }
         const salt = await bcrypt.genSalt(saltRounds);
         const passwordHash = await bcrypt.hash(body.password, salt);
-        await prisma.User.create({
+        const user = await prisma.User.create({
             data: {
                 email: body.email,
                 password: passwordHash,
                 salt: salt
             }
         })
+        var token = jwt.sign({ id: user.id }, process.env.JWT_KEY);
+        setCookie(event, 'TodoJWT', token);
         return {
             data: 'success'
         }
