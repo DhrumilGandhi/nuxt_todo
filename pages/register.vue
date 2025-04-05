@@ -1,14 +1,10 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
     <div class="flex bg-black h-screen">
         <div class=" bg-zinc-900 w-[516px] p-8 flex flex-col justify-center">
             <Logo />
             <h1 class="text-white font-bold text-lg mt-8">Sign up for a free account</h1>
-            <p class="text-zinc-300 text-sm mt-0.5">Already registered? <span
-                    class="font-bold text-[#FFAC00] underline"> Log in </span>to your account</p>
+            <p class="text-zinc-300 text-sm mt-0.5">Already registered? <NuxtLink to="/login"
+                    class="font-bold text-[#FFAC00] underline">Log in</NuxtLink> to your account</p>
             <form @submit.prevent="submit">
                 <div class="mt-8">
                     <label class="text-zinc-300 font-normal block mb-0.5" for="">Email Address</label>

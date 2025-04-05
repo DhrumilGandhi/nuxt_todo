@@ -9,7 +9,6 @@ export default defineNuxtRouteMiddleware(async (event) => {
     try {
         await $verifyJwtToken(jwtToken.value, process.env.JWT_KEY);
     } catch (error) {
-\\
         return navigateTo('/register');
     }
 });

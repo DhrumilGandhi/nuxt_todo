@@ -24,28 +24,31 @@ export default defineEventHandler(async (event) => {
                 message: 'Invalid Password'
             });
         }
-        const salt = await bcrypt.genSalt(10);
-        const passwordHash = await bcrypt.hash(body.password, salt);
-        const user = await prisma.User.create({
-            data: {
-                email: body.email,
-                password: passwordHash,
-                salt: salt
+        const user = await prisma.User.findUnique({
+            where: {
+                email: body.email
             }
-        })
-        var token = jwt.sign({ id: user.id }, process.env.JWT_KEY);
-        setCookie(event, 'TodoJWT', token);
-        return {
-            data: 'success'
-        }
-    } catch (error) {
-        console.log(error.code);
-        if (error.code === 'P2002') {
+        });
+        if (user) {
+            const isValid = await bcrypt.compare(body.password , user.password);
+            if (!isValid) {
+                throw createError({
+                    statusCode: 400,
+                    message: 'Invaid Email or Password'
+                });
+            }
+            var token = jwt.sign({ id: user.id }, process.env.JWT_KEY);
+            setCookie(event, 'TodoJWT', token);
+            return {
+                data: 'success'
+            }
+        } else {
             throw createError({
-                statusCode: 409,
-                message: 'Email already exists'
+                statusCode: 400,
+                message: 'Invaid Email or Password'
             });
         }
+    } catch (error) {
         throw error
     }
 });
