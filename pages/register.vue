@@ -12,15 +12,13 @@
             <form @submit.prevent="submit">
                 <div class="mt-8">
                     <label class="text-zinc-300 font-normal block mb-0.5" for="">Email Address</label>
-                    <input type="email"
-                        v-model="email"
+                    <input type="email" v-model="email"
                         class="block w-full bg-[#27272A] border border-[#3F3F46] rounded text-white px-4 py-2 placeholder:text-zinc-500 text-sm"
                         placeholder="you@example.com">
                 </div>
                 <div class="mt-6">
                     <label class="text-zinc-300 font-normal block mb-0.5" for="">Password</label>
-                    <input type="password"
-                        v-model="password"
+                    <input type="password" v-model="password"
                         class="block w-full bg-[#27272A] border border-[#3F3F46] rounded text-white px-4 py-2 placeholder:text-zinc-500 text-sm"
                         placeholder="*********">
                 </div>
@@ -40,21 +38,32 @@
 </template>
 
 <script setup>
+    import Swal from 'sweetalert2';
     const email = ref('');
     const password = ref('');
     async function submit () {
-        console.log(email.value);
-        console.log(password.value);
-
-        const response = await $fetch('./api/user',{
-            method: 'POST',
-            body: {
-                email: email.value,
-                password: password.value
-            }
-        })
-
-        console.log(response);
+        try {
+            const response = await $fetch('./api/user',{
+                method: 'POST',
+                body: {
+                    email: email.value,
+                    password: password.value
+                }
+            });
+            Swal.fire({
+                title: 'Success',
+                text: 'Account Created',
+                icon: 'success',
+                confirmButtonText: 'Close'
+            })
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: error.response?._data?.message,
+                icon: 'error',
+                confirmButtonText: 'Close'
+            })
+        }
         
     }
 </script>
